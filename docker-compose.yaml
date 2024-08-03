@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  db:
+    container_name: MySql_container
+    image: mysql
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: arofan_kamal
+      POSTGRES_DB: greenhouse
+    ports:
+      - "3306:3306"
+
+  backend:
+    container_name: dotnet_app
+    image: api-asp
+    build:
+      context: . # untuk akses dimana Dockerfile berada
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80" # port yang akan digunakan .NET nantinya
+    depends_on:
+      - mysql # image ini akan dibuat setelah pgadmin dibuat
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production # Mengubah ENV kita menjadi Production
+    volumes:
+      - /home/azureuser/Upload/FileCourse:/app/uploads/course
+      - /home/azureuser/Upload/FileAssignment:/app/uploads/assignment
+      - /home/azureuser/Upload/FileAssignmentSubmission:/app/uploads/assignmentSubmission
